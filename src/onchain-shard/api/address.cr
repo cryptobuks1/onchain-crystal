@@ -12,7 +12,7 @@ module OnChain
           headers.add("X-API-KEY", ENV["ONCHAIN_API_KEY"])
         end
 
-        url = "https://onchain.io/api/v1/address/balance/#{coin_type}/#{address}/"
+        url = "https://onchain-api.azurewebsites.net/v1/address/balance/#{coin_type}/#{address}/"
 
         params = HTTP::Params.parse("")
 
