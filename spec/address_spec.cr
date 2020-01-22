@@ -9,7 +9,7 @@ describe OnChain::API::Address do
   
     case resp
     when OnChain::API::OnchainBalanceReply
-      resp.human_balance.should be > 19.50874242
+      resp.human_balance.should be > 0.01
     else
       puts resp.to_s
       true.should eq(false)
