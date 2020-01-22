@@ -1,0 +1,22 @@
+version: '3.4'
+services:
+
+  onchain:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    
+    volumes:
+      - ..:/onchain-crystal:cached
+      - ~/.ssh:/root/host-ssh:cached
+      - ~/.kube/config:/root/kube-config:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    working_dir: /onchain-crystal
+
+
+    
