@@ -1,0 +1,209 @@
+openapi: 3.0.1
+info:
+  title: onchain.proto
+  version: version not set
+servers:
+- url: /
+paths:
+  /v1/address/balance/{coin_type}/{address}:
+    get:
+      tags:
+      - Address
+      operationId: GetBalance
+      parameters:
+      - name: coin_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - BITCOIN
+          - ETHEREUM
+          - TESTNET3
+          - BITCOIN_CASH
+          - BITCOIN_GOLD
+          - LITECOIN
+          - DASH
+          - DOGE
+          - BITCOIN_PRIVATE
+          - ZCASH
+          - ZCASH_TESTNET
+          - ZCLASSIC
+      - name: address
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/onchainBalanceReply'
+  /v1/address/{coin_type}/{public_key}:
+    get:
+      tags:
+      - Address
+      operationId: GetNetworkAddress
+      parameters:
+      - name: coin_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - BITCOIN
+          - ETHEREUM
+          - TESTNET3
+          - BITCOIN_CASH
+          - BITCOIN_GOLD
+          - LITECOIN
+          - DASH
+          - DOGE
+          - BITCOIN_PRIVATE
+          - ZCASH
+          - ZCASH_TESTNET
+          - ZCLASSIC
+      - name: public_key
+        in: path
+        required: true
+        schema:
+          type: string
+          format: byte
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/onchainAddressReply'
+  /v1/transaction/{coin_type}:
+    post:
+      tags:
+      - Transaction
+      operationId: CreateTransaction
+      parameters:
+      - name: coin_type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - BITCOIN
+          - ETHEREUM
+          - TESTNET3
+          - BITCOIN_CASH
+          - BITCOIN_GOLD
+          - LITECOIN
+          - DASH
+          - DOGE
+          - BITCOIN_PRIVATE
+          - ZCASH
+          - ZCASH_TESTNET
+          - ZCLASSIC
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/onchainTransactionReply'
+components:
+  schemas:
+    onchainAddressReply:
+      type: object
+      properties:
+        network_address:
+          type: string
+    onchainBalanceReply:
+      type: object
+      properties:
+        usd_balance:
+          type: number
+          format: float
+        balance:
+          type: string
+          format: uint64
+        unconfirmed_balance:
+          type: string
+          format: uint64
+        human_balance:
+          type: number
+          format: double
+        human_unconfirmed_balance:
+          type: number
+          format: double
+    onchainBalancesReply:
+      type: object
+      properties:
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/onchainBalanceReply'
+    onchainCoinType:
+      type: string
+      default: BITCOIN
+      enum:
+      - BITCOIN
+      - ETHEREUM
+      - TESTNET3
+      - BITCOIN_CASH
+      - BITCOIN_GOLD
+      - LITECOIN
+      - DASH
+      - DOGE
+      - BITCOIN_PRIVATE
+      - ZCASH
+      - ZCASH_TESTNET
+      - ZCLASSIC
+    onchainEthereumTransactionReply:
+      type: object
+      properties:
+        tx:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte
+        to_sign:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte
+    onchainHashToSign:
+      type: object
+      properties:
+        input_index:
+          type: integer
+          format: int64
+        public_key:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte
+        hash_to_sign:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte
+        signature:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte
+    onchainTransactionReply:
+      type: object
+      properties:
+        tx:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte
+        total_input_value:
+          type: string
+          format: uint64
+        hashes_to_sign:
+          type: array
+          items:
+            $ref: '#/components/schemas/onchainHashToSign'
+    onchainTransactionSendReply:
+      type: object
+      properties:
+        tx_hash:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte

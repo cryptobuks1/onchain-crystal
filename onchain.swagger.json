@@ -1,0 +1,268 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "onchain.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/address/balance/{coin_type}/{address}": {
+      "get": {
+        "operationId": "GetBalance",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/onchainBalanceReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "coin_type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "BITCOIN",
+              "ETHEREUM",
+              "TESTNET3",
+              "BITCOIN_CASH",
+              "BITCOIN_GOLD",
+              "LITECOIN",
+              "DASH",
+              "DOGE",
+              "BITCOIN_PRIVATE",
+              "ZCASH",
+              "ZCASH_TESTNET",
+              "ZCLASSIC"
+            ]
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Address"
+        ]
+      }
+    },
+    "/v1/address/{coin_type}/{public_key}": {
+      "get": {
+        "operationId": "GetNetworkAddress",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/onchainAddressReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "coin_type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "BITCOIN",
+              "ETHEREUM",
+              "TESTNET3",
+              "BITCOIN_CASH",
+              "BITCOIN_GOLD",
+              "LITECOIN",
+              "DASH",
+              "DOGE",
+              "BITCOIN_PRIVATE",
+              "ZCASH",
+              "ZCASH_TESTNET",
+              "ZCLASSIC"
+            ]
+          },
+          {
+            "name": "public_key",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "Address"
+        ]
+      }
+    },
+    "/v1/transaction/{coin_type}": {
+      "post": {
+        "operationId": "CreateTransaction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/onchainTransactionReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "coin_type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "BITCOIN",
+              "ETHEREUM",
+              "TESTNET3",
+              "BITCOIN_CASH",
+              "BITCOIN_GOLD",
+              "LITECOIN",
+              "DASH",
+              "DOGE",
+              "BITCOIN_PRIVATE",
+              "ZCASH",
+              "ZCASH_TESTNET",
+              "ZCLASSIC"
+            ]
+          }
+        ],
+        "tags": [
+          "Transaction"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "onchainAddressReply": {
+      "type": "object",
+      "properties": {
+        "network_address": {
+          "type": "string"
+        }
+      }
+    },
+    "onchainBalanceReply": {
+      "type": "object",
+      "properties": {
+        "usd_balance": {
+          "type": "number",
+          "format": "float"
+        },
+        "balance": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "unconfirmed_balance": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "human_balance": {
+          "type": "number",
+          "format": "double"
+        },
+        "human_unconfirmed_balance": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "onchainBalancesReply": {
+      "type": "object",
+      "properties": {
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/onchainBalanceReply"
+          }
+        }
+      }
+    },
+    "onchainCoinType": {
+      "type": "string",
+      "enum": [
+        "BITCOIN",
+        "ETHEREUM",
+        "TESTNET3",
+        "BITCOIN_CASH",
+        "BITCOIN_GOLD",
+        "LITECOIN",
+        "DASH",
+        "DOGE",
+        "BITCOIN_PRIVATE",
+        "ZCASH",
+        "ZCASH_TESTNET",
+        "ZCLASSIC"
+      ],
+      "default": "BITCOIN"
+    },
+    "onchainEthereumTransactionReply": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "type": "string",
+          "format": "byte"
+        },
+        "to_sign": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "onchainHashToSign": {
+      "type": "object",
+      "properties": {
+        "input_index": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "public_key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "hash_to_sign": {
+          "type": "string",
+          "format": "byte"
+        },
+        "signature": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "onchainTransactionReply": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "type": "string",
+          "format": "byte"
+        },
+        "total_input_value": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "hashes_to_sign": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/onchainHashToSign"
+          }
+        }
+      }
+    },
+    "onchainTransactionSendReply": {
+      "type": "object",
+      "properties": {
+        "tx_hash": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    }
+  }
+}
